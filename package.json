@@ -1,7 +1,29 @@
 {
   "name": "mdwiki",
+  "description": "Markdown Wiki Server for Local usage",
+  "homepage": "https://github.com/erickrdch/mdwiki",
   "version": "0.1.0",
-  "private": true,
+  "author": {
+    "name": "Erick Ruiz de Chavez",
+    "email": "erickrdch@gmail.com",
+    "url": "http://erickrdch.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/erickrdch/mdwiki.git"
+  },
+  "bugs": {
+    "url": "https://github.com/erickrdch/mdwiki/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/erickrdch/mdwiki/blob/master/LICENSE"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.8.0"
+  },
   "main": "mdwiki.js",
   "bin": "./mdwiki.js",
   "dependencies": {
@@ -12,5 +34,10 @@
     "commander": "~1.1.1",
     "marked": "~0.2.8",
     "highlight.js": "~7.3.0"
-  }
+  },
+  "keywords": [
+    "markdown",
+    "wiki"
+  ]
 }
+
