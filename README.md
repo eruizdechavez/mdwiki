@@ -1,6 +1,6 @@
 # mdwiki
 
-This project was created due to my (and my team's) necesity to have documentation repository that is not dependent on any other server or database and since [Markdown](http://daringfireball.net/projects/markdown/) is one of the most common formats today for this documentation types and [Git Flavored Markdown](http://github.github.com/github-flavored-markdown/) is even better, then it was an obvious choice.
+This project was created due to my necesity to have an easy to mantain documentation repository that is not dependent on any other server or database and since [Markdown](http://daringfireball.net/projects/markdown/) is one of the most common formats today for this documentation types and [Git Flavored Markdown](http://github.github.com/github-flavored-markdown/) is even better, then it was an obvious choice.
 
 By using ```mdwiki``` as a global module you will be able to run it on your project folder and nicely read any [Markdown](http://daringfireball.net/projects/markdown/) you have on it; if you have (and I am sure you do have) other modules installed on your project, you'll be able to also easily read their documentation without having to navigate to other places.
 
