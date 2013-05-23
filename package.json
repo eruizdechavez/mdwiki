@@ -9,6 +9,8 @@
     "hjs": "~0.0.4",
     "express-partials": "~0.1.1",
     "bunyan": "~0.21.3",
-    "commander": "~1.1.1"
+    "commander": "~1.1.1",
+    "marked": "~0.2.8",
+    "highlight.js": "~7.3.0"
   }
 }

@@ -3,6 +3,6 @@
     sidebar
   </div>
   <div class="span9">
-    content
+    {{{ test }}}
   </div>
 </div>
