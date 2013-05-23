@@ -1,14 +1,14 @@
 {
-  "name": "application-name",
-  "version": "0.0.1",
+  "name": "mdwiki",
+  "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "start": "node app.js"
-  },
+  "main": "mdwiki.js",
+  "bin": "./mdwiki.js",
   "dependencies": {
     "express": "~3.2.5",
     "hjs": "~0.0.4",
     "express-partials": "~0.1.1",
-    "bunyan": "~0.21.3"
+    "bunyan": "~0.21.3",
+    "commander": "~1.1.1"
   }
 }
