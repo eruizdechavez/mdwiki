@@ -15,7 +15,11 @@ program
 
 marked.setOptions({
   gfm: true,
-  langPrefix: 'language-',
+  tables: true,
+  breaks: true,
+  pedantic: false,
+  sanitize: true,
+  smartLists: true,  langPrefix: 'language-',
   highlight: function (code, lang) {
     lang = lang === 'js' ? 'javascript' : lang;
     return lang ? highlight.highlight(lang, code).value : code;
