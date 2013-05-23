@@ -12,7 +12,7 @@ exports.initialize = function (app) {
 };
 
 exports.list = function (req, res, next) {
-  var _path = path.join(req.app.get('path'), req.url),
+  var _path = path.join(req.app.get('path'), decodeURIComponent(req.url)),
     stats = fs.statSync(_path),
     cwd, content, dirs, files;
 
@@ -61,7 +61,7 @@ exports.index = function (req, res) {
 };
 
 exports.md = function (req, res) {
-  var _path = path.join(req.app.get('path'), req.params[0]);
+  var _path = path.join(req.app.get('path'), decodeURIComponent(req.params[0]));
 
   fs.exists(_path, function (exists) {
     if (!exists) {
