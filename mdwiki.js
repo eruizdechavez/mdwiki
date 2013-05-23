@@ -1,11 +1,7 @@
 #!/usr/bin/env node
 
-var program = require('commander');
-program
-  .option('-p, --port [port]', 'Port [8080]')
-  .parse(process.argv);
-
-var express = require('express'),
+var program = require('commander'),
+  express = require('express'),
   partials = require('express-partials'),
   http = require('http'),
   path = require('path'),
@@ -13,44 +9,42 @@ var express = require('express'),
   highlight = require("highlight.js"),
   bunyan = require('bunyan');
 
-// Set default options
+program
+  .option('-p, --port [port]', 'Port [8080]')
+  .parse(process.argv);
+
 marked.setOptions({
   gfm: true,
-  tables: true,
-  breaks: false,
-  pedantic: false,
-  sanitize: true,
-  smartLists: true,
   langPrefix: 'language-',
   highlight: function (code, lang) {
+    lang = lang === 'js' ? 'javascript' : lang;
     return lang ? highlight.highlight(lang, code).value : code;
   }
 });
 
 var app = express(),
-  log = app.log = bunyan.createLogger({
+  log = bunyan.createLogger({
     name: 'mdwiki'
-  }),
-  _path = path.resolve(program.args.shift() || '.');
+  });
 
-app.set('port', program.port || 8080);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'hjs');
+app.set('port', program.port || 8080);
+app.set('path', path.resolve(program.args.shift() || '.'));
+app.set('log', log);
+
 app.use(express.favicon());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(partials());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(_path));
+app.use(express.static(app.get('path')));
 
-app.get('/', function (req, res) {
-  res.render('index.hjs', {
-    test: marked('```javascript\nfunction test() {\n  i.am.using.markdown();\n}\n```')
-  });
-});
+var index = require('./routes/index');
+index.initialize(app);
 
 http.createServer(app).listen(app.get('port'), function () {
   log.info('mdwiki running on port ' + app.get('port'));
-  log.info('mdwiki serving content at ' + _path);
+  log.info('mdwiki serving content at ' + app.get('path'));
 });
