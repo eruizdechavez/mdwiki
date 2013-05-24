@@ -15,5 +15,12 @@
 
     <script src="/js/libs/jquery-2.0.0.js"></script>
     <script src="/js/libs/bootstrap.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect('http://' + window.location.host);
+      socket.on('watch', function (data) {
+        window.location.reload();
+      });
+    </script>
   </body>
 </html>

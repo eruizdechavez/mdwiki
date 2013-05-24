@@ -8,11 +8,13 @@
     "email": "erickrdch@gmail.com",
     "url": "http://erickrdch.com"
   },
-  "contributors": [{
-    "name": "Jorge Luis Parga",
-    "email": "el.parga@gmail.com",
-    "url": "https://github.com/parga"
-  }],
+  "contributors": [
+    {
+      "name": "Jorge Luis Parga",
+      "email": "el.parga@gmail.com",
+      "url": "https://github.com/parga"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/erickrdch/mdwiki.git"
@@ -39,11 +41,11 @@
     "bunyan": "~0.21.3",
     "commander": "~1.1.1",
     "marked": "~0.2.8",
-    "highlight.js": "~7.3.0"
+    "highlight.js": "~7.3.0",
+    "socket.io": "~0.9.14"
   },
   "keywords": [
     "markdown",
     "wiki"
   ]
 }
-

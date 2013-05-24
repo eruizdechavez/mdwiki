@@ -21,6 +21,13 @@ cd to/your/project/folder
 mdwiki
 ```
 
+You can also ask ```mdwiki``` to serve content on a different folder:
+
+```
+cd to/your/project/folder
+mdwiki ./wiki
+```
+
 ### Command Line Options
 
 ```mdwiki``` currently suppors following options:
