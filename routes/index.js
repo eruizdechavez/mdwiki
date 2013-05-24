@@ -1,87 +1,75 @@
 var marked = require('marked'),
   path = require('path'),
-  fs = require('fs'),
-  log = null;
+  fs = require('fs');
 
-exports.initialize = function (app) {
-  log = app.get('log');
+function list(req, res, next) {
+  var app_path = path.join(req.app.get('path'), decodeURIComponent(req.url)),
+    dirs_and_files = [],
+    cwd;
 
-  app.get('/', exports.list, exports.index);
-  app.get(/(.+)\/$/, exports.list, exports.index);
-  app.get(/((.+)\.md$)/i, exports.list, exports.md);
-};
-
-exports.list = function (req, res, next) {
-  var _path = path.join(req.app.get('path'), decodeURIComponent(req.url)),
-    stats = fs.statSync(_path),
-    cwd, content, dirs, files;
-
-  if (!stats.isDirectory()) {
-    cwd = path.dirname(_path);
+  if (!fs.statSync(app_path).isDirectory()) {
+    cwd = path.dirname(app_path);
   } else {
-    cwd = _path;
+    cwd = app_path;
   }
 
-  content = fs.readdirSync(cwd);
-
-  files = content.filter(function (item) {
+  fs.readdirSync(cwd).forEach(function (item) {
     if (req.url[req.url.length - 1] === '/' && path.basename(item).toLowerCase() === 'readme.md') {
       return res.redirect(req.url + item);
     }
 
-    return fs.statSync(path.join(cwd, item)).isFile() && path.extname(item).toLowerCase() === '.md';
-  });
-
-  dirs = content.filter(function (item) {
-    return fs.statSync(path.join(cwd, item)).isDirectory();
+    if (fs.statSync(path.join(cwd, item)).isDirectory()) {
+      dirs_and_files.push({
+        name: item,
+        type: 'directory'
+      });
+    } else if (fs.statSync(path.join(cwd, item)).isFile() && path.extname(item).toLowerCase() === '.md') {
+      dirs_and_files.push({
+        name: item,
+        type: 'file'
+      });
+    }
   });
 
   if (req.url !== '/') {
-    dirs.unshift('..');
+    dirs_and_files.unshift({
+      name: '..',
+      type: 'directory'
+    });
   }
 
-  req.dirs = dirs;
-  req.files = files;
-  req.cwd = dirs.concat(files);
+  req.dirs_and_files = dirs_and_files;
   return next();
+}
+
+exports.initialize = function (app) {
+  app.get('/', list, exports.index);
+  app.get(/(.+)\/$/, list, exports.index);
+  app.get(/((.+)\.md$)/i, list, exports.md);
 };
 
 exports.index = function (req, res) {
   res.render('index', {
     title: path.basename(path.resolve(req.get('path'))),
     content: 'Select an .md file or folder from the sidebar.',
-    dirs: req.dirs,
-    files: req.files,
-    dirs_and_files: req.cwd.map(function (item) {
-      return {
-        name: item
-      };
-    })
+    dirs_and_files: req.dirs_and_files
   });
 };
 
 exports.md = function (req, res) {
-  var _path = path.join(req.app.get('path'), decodeURIComponent(req.params[0]));
+  var app_path = path.join(req.app.get('path'), decodeURIComponent(req.params[0]));
 
-  fs.exists(_path, function (exists) {
-    if (!exists) {
-      return res.render('index', {
-        title: '404',
-        content: 'file not found'
-      }, 404);
-    }
-    fs.readFile(_path, function (err, content) {
-      res.render('index', {
-        title: path.basename(_path),
-        content: marked(content.toString()),
-        dirs: req.dirs,
-        files: req.files,
-        dirs_and_files: req.cwd.map(function (item) {
-          return {
-            name: item
-          };
-        })
-      });
-    });
+  if (!fs.existsSync(app_path)) {
+    return res.render('index', {
+      title: '404',
+      content: 'file not found'
+    }, 404);
+  }
+
+  var content = fs.readFileSync(app_path);
+  res.render('index', {
+    title: path.basename(app_path),
+    content: marked(content.toString()),
+    dirs_and_files: req.dirs_and_files
   });
 };
