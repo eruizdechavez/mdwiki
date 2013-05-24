@@ -46,6 +46,7 @@ exports.initialize = function (app) {
   app.get('/', list, exports.index);
   app.get(/(.+)\/$/, list, exports.index);
   app.get(/((.+)\.md$)/i, list, exports.md);
+  app.get('/new', exports.new);
 };
 
 exports.index = function (req, res) {
@@ -72,4 +73,16 @@ exports.md = function (req, res) {
     content: marked(content.toString()),
     dirs_and_files: req.dirs_and_files
   });
+};
+
+exports.new = function(req, res){
+  res.render('index', {
+    create: 'active',
+    content: '<div class="input-prepend"><span class="add-on">Name: </span>'+
+             '<input class="span4" id="" type="text" placeholder="File name"></div>'+
+             '<textarea class="field span7" rows="15"></textarea>'+
+             '<p><button class="btn btn-info" type="button">Save</button></p>'
+  });
+
+
 };

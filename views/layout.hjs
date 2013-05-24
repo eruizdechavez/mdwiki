@@ -10,6 +10,25 @@
 
   <body>
     <div class="container">
+
+      <div class="navbar">
+        <div class="navbar-inner">
+          <a class="brand" href="#">MDWiki</a>
+          <ul class="nav">
+            <li class={{create}}>
+              <a href=""><i class="icon-pencil"></i>&nbsp;New file</a>
+            </li>
+            <li>
+              <a href="#"><i class="icon-edit"></i>&nbsp;Edit file</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {{dir_and_files}}
+      {{title}}
+
+
       {{{ body }}}
     </div>
 
