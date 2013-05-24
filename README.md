@@ -35,12 +35,19 @@ mdwiki ./wiki
 ```
   -h, --help         output usage information
   -p, --port [port]  Port [8080]
+  -W, --no-watch     Disable folder watch (Browser autoreload)
 ```
 
 If something else is using port 8080 and you need to run ```mdwiki``` on a different folder, just add the port option:
 
 ```
 mdwiki -p 3000
+```
+
+By deafult ```mdwiki``` will watch for changes on the content folder and use [socket.io](https://github.com/learnboost/socket.io) to live reload the browser, this behavior can be disabled by using ```--no-watch``` modifier.
+
+```
+mdwiki --no-watch
 ```
 
 ## Dependencies
@@ -56,6 +63,7 @@ Some of the used libraries include:
 - [commander](https://github.com/visionmedia/commander.js)
 - [marked](https://github.com/chjj/marked)
 - [highlight.js](https://github.com/isagalaev/highlight.js)
+- [socket.io](https://github.com/learnboost/socket.io)
 
 ## Licence
 
