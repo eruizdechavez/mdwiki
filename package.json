@@ -8,6 +8,11 @@
     "email": "erickrdch@gmail.com",
     "url": "http://erickrdch.com"
   },
+  "contributors": [{
+    "name": "Jorge Luis Parga",
+    "email": "el.parga@gmail.com",
+    "url": "https://github.com/parga"
+  }],
   "repository": {
     "type": "git",
     "url": "git://github.com/erickrdch/mdwiki.git"
@@ -26,6 +31,7 @@
   },
   "main": "mdwiki.js",
   "bin": "./mdwiki.js",
+  "preferGlobal": true,
   "dependencies": {
     "express": "~3.2.5",
     "hjs": "~0.0.4",
