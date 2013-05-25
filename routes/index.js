@@ -47,6 +47,7 @@ exports.initialize = function (app) {
   app.get(/(.+)\/$/, list, exports.index);
   app.get(/((.+)\.md$)/i, list, exports.md);
   app.get('/new', exports.new);
+  app.get('/save', exports.save);
 };
 
 exports.index = function (req, res) {
@@ -75,7 +76,7 @@ exports.md = function (req, res) {
   });
 };
 
-exports.new = function(req, res){
+exports.new = function (req, res) {
   res.render('index', {
     create: 'active',
     content: '<div class="input-prepend"><span class="add-on">Name: </span>'+
@@ -84,5 +85,8 @@ exports.new = function(req, res){
              '<p><button class="btn btn-info" type="button">Save</button></p>'
   });
 
+};
+
+exports.save = function (req, res) {
 
 };
