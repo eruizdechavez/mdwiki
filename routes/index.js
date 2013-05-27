@@ -47,7 +47,8 @@ exports.initialize = function (app) {
   app.get(/(.+)\/$/, list, exports.index);
   app.get(/((.+)\.md$)/i, list, exports.md);
   app.get('/new', exports.new);
-  app.get('/save', exports.save);
+  app.post('/save', exports.save);
+  app.get('/:fileName/edit', exports.edit);
 };
 
 exports.index = function (req, res) {
@@ -79,14 +80,50 @@ exports.md = function (req, res) {
 exports.new = function (req, res) {
   res.render('index', {
     create: 'active',
-    content: '<div class="input-prepend"><span class="add-on">Name: </span>'+
-             '<input class="span4" id="" type="text" placeholder="File name"></div>'+
-             '<textarea class="field span7" rows="15"></textarea>'+
-             '<p><button class="btn btn-info" type="button">Save</button></p>'
+    path: req.app.get('path').replace(/[/\\*]/g, "/"),
+    content: '<form method="post" action="/save">'+
+             '<div class="input-prepend"><span class="add-on">Name: </span>'+
+             '<input class="span4" id="fileName" type="text" placeholder="File name" name="fileName"></div>'+
+             '<textarea class="field span7" rows="15" name="fileContent" id="fileContent"></textarea>'+
+             '<p><button class="btn btn-info" type="submit">Save</button></p></form>'
   });
+};
+
+exports.edit = function (req, res) {
+  var fileName = req.params.fileName;
+  var path = req.app.get('path').replace(/[/\\*]/g, "/");
+
 
 };
 
 exports.save = function (req, res) {
+  var fileName = req.body.fileName;
+  var fileContent = req.body.fileContent;
+  var path = req.app.get('path').replace(/[/\\*]/g, "/");
+  
+  if (fileName != ''){
+    if (verifyExtension(fileName) === true) {
+      fs.writeFile(path + '/' + fileName, fileContent, function(err, data) {
+        if (err) {
+          console.log('Error: ' + err);
+        }else {
+          marked(fileContent);
+          console.log('Ok');
+          res.send("saving file", 200);
 
+        }
+      });
+    }
+  }else {
+    console.log('Error: Extension');
+  }
 };
+
+/* Functions */
+function verifyExtension(fileName) {
+  if ((path.extname(fileName) == '.md') || (path.extname(fileName) == '.markdown')) {
+    return true;
+  }else {
+    return false;
+  }
+}
