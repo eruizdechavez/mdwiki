@@ -3,7 +3,8 @@ var marked = require('marked'),
   fs = require('fs');
 
 function list(req, res, next) {
-  var app_path = path.join(req.app.get('path'), decodeURIComponent(req.url)),
+  var url = decodeURIComponent(req.url).replace("/edit",'');
+  var app_path = path.join(req.app.get('path'), url),
     dirs_and_files = [],
     cwd;
 
@@ -46,9 +47,8 @@ exports.initialize = function (app) {
   app.get('/', list, exports.index);
   app.get(/(.+)\/$/, list, exports.index);
   app.get(/((.+)\.md$)/i, list, exports.md);
-  app.get('/new', exports.new);
-  app.post('/save', exports.save);
-  app.get('/:fileName/edit', exports.edit);
+  app.get(/((.+)\.md\/edit$)/i, list, exports.edit);
+  app.post('/((.+)\.md$)/i', list, exports.save);
 };
 
 exports.index = function (req, res) {
@@ -77,26 +77,28 @@ exports.md = function (req, res) {
   });
 };
 
-exports.new = function (req, res) {
-  res.render('index', {
-    create: 'active',
-    path: req.app.get('path').replace(/[/\\*]/g, "/"),
-    content: '<form method="post" action="/save">'+
-             '<div class="input-prepend"><span class="add-on">Name: </span>'+
-             '<input class="span4" id="fileName" type="text" placeholder="File name" name="fileName"></div>'+
-             '<textarea class="field span7" rows="15" name="fileContent" id="fileContent"></textarea>'+
-             '<p><button class="btn btn-info" type="submit">Save</button></p></form>'
-  });
-};
-
 exports.edit = function (req, res) {
-  var fileName = req.params.fileName;
-  var path = req.app.get('path').replace(/[/\\*]/g, "/");
+  var app_path = path.join(req.app.get('path'), decodeURIComponent(req.url).replace("/edit",''));
+  var url = path.basename(app_path);
+  var content = fs.readFileSync(app_path);
 
+  if (!fs.existsSync(app_path)) {
+    return res.render('index', {
+      title: '404',
+      content: 'file not found'
+    }, 404);
+  }else {
+    res.render('edit', {
+      edit: 'active',
+      dirs_and_files: req.dirs_and_files,
+      title: path.basename(app_path),
+      content: content
+    });
+  }
 
 };
 
-exports.save = function (req, res) {
+/*exports.save = function (req, res) {
   var fileName = req.body.fileName;
   var fileContent = req.body.fileContent;
   var path = req.app.get('path').replace(/[/\\*]/g, "/");
@@ -117,7 +119,7 @@ exports.save = function (req, res) {
   }else {
     console.log('Error: Extension');
   }
-};
+};*/
 
 /* Functions */
 function verifyExtension(fileName) {

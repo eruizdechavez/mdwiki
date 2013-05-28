@@ -18,7 +18,7 @@
             <li class={{create}}>
               <a href="/new"><i class="icon-pencil"></i>&nbsp;New file</a>
             </li>
-            <li>
+            <li class={{edit}}>
               <a href="{{title}}/edit"><i class="icon-edit"></i>&nbsp;Edit file</a>
             </li>
           </ul>
