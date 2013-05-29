@@ -4,7 +4,9 @@ var marked = require('marked'),
 
 function list(req, res, next) {
   /* Change to regular expression */
-  var url = decodeURIComponent(req.url).replace("/edit",'');
+  //var url = decodeURIComponent(req.url).replace('/(save|edit)$/ig','');
+
+  var url = decodeURIComponent(req.url).split('.md/');
   var app_path = path.join(req.app.get('path'), url),
     dirs_and_files = [],
     cwd;
@@ -49,7 +51,7 @@ exports.initialize = function (app) {
   app.get(/(.+)\/$/, list, exports.index);
   app.get(/((.+)\.md$)/i, list, exports.md);
   app.get(/((.+)\.md\/edit$)/i, list, exports.edit);
-  app.post('/((.+)\.md$)/i', list, exports.save);
+  app.post(/((.+)\.md\/save$)/i, list, exports.save);
 };
 
 exports.index = function (req, res) {
@@ -96,31 +98,27 @@ exports.edit = function (req, res) {
       content: content
     });
   }
-
 };
 
-/*exports.save = function (req, res) {
+exports.save = function (req, res) {
   var fileName = req.body.fileName;
   var fileContent = req.body.fileContent;
   var path = req.app.get('path').replace(/[/\\*]/g, "/");
-  
+
   if (fileName != ''){
     if (verifyExtension(fileName) === true) {
       fs.writeFile(path + '/' + fileName, fileContent, function(err, data) {
         if (err) {
-          console.log('Error: ' + err);
+          //console.log('Error: ' + err);
         }else {
           marked(fileContent);
-          console.log('Ok');
-          res.send("saving file", 200);
-
         }
       });
     }
   }else {
-    console.log('Error: Extension');
+    //console.log('Error: Extension');
   }
-};*/
+};
 
 /* Functions */
 function verifyExtension(fileName) {
