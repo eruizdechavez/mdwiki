@@ -3,6 +3,7 @@ var marked = require('marked'),
   fs = require('fs');
 
 function list(req, res, next) {
+  /* Change to regular expression */
   var url = decodeURIComponent(req.url).replace("/edit",'');
   var app_path = path.join(req.app.get('path'), url),
     dirs_and_files = [],
@@ -78,7 +79,7 @@ exports.md = function (req, res) {
 };
 
 exports.edit = function (req, res) {
-  var app_path = path.join(req.app.get('path'), decodeURIComponent(req.url).replace("/edit",''));
+  var app_path = path.join(req.app.get('path'), decodeURIComponent(req.url).replace('/edit',''));
   var url = path.basename(app_path);
   var content = fs.readFileSync(app_path);
 
