@@ -3,6 +3,12 @@ var marked = require('marked'),
   fs = require('fs');
 
 function list(req, res, next) {
+<<<<<<< HEAD
+=======
+  /* Change to regular expression */
+  //var url = decodeURIComponent(req.url).replace('/(save|edit)$/ig','');
+
+>>>>>>> 77d96ce6177cf227ac08e8ec5a30fc3cbf7541b9
   var url = decodeURIComponent(req.url).split('.md/');
   var app_path = path.join(req.app.get('path'), url),
     dirs_and_files = [],
@@ -47,7 +53,10 @@ exports.initialize = function (app) {
   app.get('/', list, exports.index);
   app.get(/(.+)\/$/, list, exports.index);
   app.get(/((.+)\.md$)/i, list, exports.md);
+<<<<<<< HEAD
   app.get('/new', list, exports.new);
+=======
+>>>>>>> 77d96ce6177cf227ac08e8ec5a30fc3cbf7541b9
   app.get(/((.+)\.md\/edit$)/i, list, exports.edit);
   app.post(/((.+)\.md\/save$)/i, list, exports.save);
 };
@@ -78,10 +87,13 @@ exports.md = function (req, res) {
   });
 };
 
+<<<<<<< HEAD
 exports.new = function (req, res) {
   
 };
 
+=======
+>>>>>>> 77d96ce6177cf227ac08e8ec5a30fc3cbf7541b9
 exports.edit = function (req, res) {
   var app_path = path.join(req.app.get('path'), decodeURIComponent(req.url).replace('/edit',''));
   var url = path.basename(app_path);
@@ -105,6 +117,7 @@ exports.edit = function (req, res) {
 exports.save = function (req, res) {
   var fileName = req.body.fileName;
   var fileContent = req.body.fileContent;
+<<<<<<< HEAD
   var pathFile = req.app.get('path').replace(/[/\\*]/g, "/");
 
   if (fileName != ''){
@@ -118,14 +131,29 @@ exports.save = function (req, res) {
         }else {
           marked(fileContent);
           res.redirect(fileName+'/edit');
+=======
+  var path = req.app.get('path').replace(/[/\\*]/g, "/");
+
+  if (fileName != ''){
+    if (verifyExtension(fileName) === true) {
+      fs.writeFile(path + '/' + fileName, fileContent, function(err, data) {
+        if (err) {
+          //console.log('Error: ' + err);
+        }else {
+          marked(fileContent);
+>>>>>>> 77d96ce6177cf227ac08e8ec5a30fc3cbf7541b9
         }
       });
     }
   }else {
+<<<<<<< HEAD
     return res.render('index', {
             title: '404',
             content: 'file not found'
     }, 404);
+=======
+    //console.log('Error: Extension');
+>>>>>>> 77d96ce6177cf227ac08e8ec5a30fc3cbf7541b9
   }
 };
 
