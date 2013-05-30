@@ -39,7 +39,8 @@
     "bunyan": "~0.21.3",
     "commander": "~1.1.1",
     "marked": "~0.2.8",
-    "highlight.js": "~7.3.0"
+    "highlight.js": "~7.3.0",
+    "socket.io": "~0.9.14"
   },
   "keywords": [
     "markdown",

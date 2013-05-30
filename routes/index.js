@@ -3,8 +3,7 @@ var marked = require('marked'),
   fs = require('fs');
 
 function list(req, res, next) {
-  /* Change to regular expression */
-  var url = decodeURIComponent(req.url).replace("/edit",'');
+  var url = decodeURIComponent(req.url).split('.md/');
   var app_path = path.join(req.app.get('path'), url),
     dirs_and_files = [],
     cwd;
@@ -48,8 +47,9 @@ exports.initialize = function (app) {
   app.get('/', list, exports.index);
   app.get(/(.+)\/$/, list, exports.index);
   app.get(/((.+)\.md$)/i, list, exports.md);
+  app.get('/new', list, exports.new);
   app.get(/((.+)\.md\/edit$)/i, list, exports.edit);
-  app.post('/((.+)\.md$)/i', list, exports.save);
+  app.post(/((.+)\.md\/save$)/i, list, exports.save);
 };
 
 exports.index = function (req, res) {
@@ -78,6 +78,10 @@ exports.md = function (req, res) {
   });
 };
 
+exports.new = function (req, res) {
+  
+};
+
 exports.edit = function (req, res) {
   var app_path = path.join(req.app.get('path'), decodeURIComponent(req.url).replace('/edit',''));
   var url = path.basename(app_path);
@@ -96,31 +100,34 @@ exports.edit = function (req, res) {
       content: content
     });
   }
-
 };
 
-/*exports.save = function (req, res) {
+exports.save = function (req, res) {
   var fileName = req.body.fileName;
   var fileContent = req.body.fileContent;
-  var path = req.app.get('path').replace(/[/\\*]/g, "/");
-  
+  var pathFile = req.app.get('path').replace(/[/\\*]/g, "/");
+
   if (fileName != ''){
     if (verifyExtension(fileName) === true) {
-      fs.writeFile(path + '/' + fileName, fileContent, function(err, data) {
+      fs.writeFile(pathFile + '/' + fileName, fileContent, function(err, data) {
         if (err) {
-          console.log('Error: ' + err);
+          return res.render('index', {
+            title: '404',
+            content: 'file not found'
+          }, 404);
         }else {
           marked(fileContent);
-          console.log('Ok');
-          res.send("saving file", 200);
-
+          res.redirect(fileName+'/edit');
         }
       });
     }
   }else {
-    console.log('Error: Extension');
+    return res.render('index', {
+            title: '404',
+            content: 'file not found'
+    }, 404);
   }
-};*/
+};
 
 /* Functions */
 function verifyExtension(fileName) {

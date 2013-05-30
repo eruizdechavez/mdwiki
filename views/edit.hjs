@@ -7,7 +7,7 @@
     </ul>
   </div>
   <div class="span9">
-    <form method="post" action="/save">
+    <form method="post" action="save">
       <div class="input-prepend">
         <span class="add-on">Name: </span>
         <input class="span4" id="fileName" type="text" placeholder="File name" name="fileName" value={{title}}>

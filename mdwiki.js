@@ -7,10 +7,12 @@ var program = require('commander'),
   path = require('path'),
   marked = require('marked'),
   highlight = require("highlight.js"),
-  bunyan = require('bunyan');
+  bunyan = require('bunyan'),
+  fs = require('fs');
 
 program
   .option('-p, --port [port]', 'Port [8080]')
+  .option('-W, --no-watch', 'Disable folder watch (Browser autoreload)')
   .parse(process.argv);
 
 marked.setOptions({
@@ -19,7 +21,8 @@ marked.setOptions({
   breaks: true,
   pedantic: false,
   sanitize: true,
-  smartLists: true,  langPrefix: 'language-',
+  smartLists: true,
+  langPrefix: 'language-',
   highlight: function (code, lang) {
     lang = lang === 'js' ? 'javascript' : lang;
     return lang ? highlight.highlight(lang, code).value : code;
@@ -31,24 +34,37 @@ var app = express(),
     name: 'mdwiki'
   });
 
-app.set('views', __dirname + '/views');
-app.set('view engine', 'hjs');
-app.set('port', program.port || 8080);
-app.set('path', path.resolve(program.args.shift() || '.'));
-app.set('log', log);
-
-app.use(express.favicon());
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(partials());
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(app.get('path')));
+app.set('views', __dirname + '/views')
+  .set('view engine', 'hjs')
+  .set('port', program.port || 8080)
+  .set('path', path.resolve(program.args.shift() || '.'))
+  .set('log', log)
+  .use(express.favicon())
+  .use(express.bodyParser())
+  .use(express.methodOverride())
+  .use(partials())
+  .use(app.router)
+  .use(express.static(path.join(__dirname, 'public')))
+  .use(express.static(app.get('path')));
 
 var index = require('./routes/index');
 index.initialize(app);
 
-http.createServer(app).listen(app.get('port'), function () {
+var server = http.createServer(app);
+
+if (program.watch) {
+  var io = require('socket.io').listen(server);
+}
+
+server.listen(app.get('port'), function () {
   log.info('mdwiki running on port ' + app.get('port'));
   log.info('mdwiki serving content at ' + app.get('path'));
 });
+
+if (program.watch) {
+  io.sockets.on('connection', function (socket) {
+    fs.watch(app.get('path'), function (event, filename) {
+      socket.emit('watch', { event: event, filename: filename });
+    });
+  });
+}
