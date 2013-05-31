@@ -95,15 +95,14 @@ exports.edit = function (req, res) {
     return res.render('index', {
       title: '404',
       content: 'file not found'
-    }, 404);
-  }else {
-    res.render('edit', {
-      edit: 'active',
-      dirs_and_files: req.dirs_and_files,
-      title: path.basename(app_path),
-      content: content
     });
   }
+  res.render('edit', {
+    edit: 'active',
+    dirs_and_files: req.dirs_and_files,
+    title: path.basename(app_path),
+    content: content
+  });
 };
 
 exports.createFile = function (req, res) {
@@ -115,10 +114,9 @@ exports.createFile = function (req, res) {
   if (fileName != ''){
     if (fs.existsSync(app_path) === false) {
       if (verifyExtension(fileName) === true) {
-        fs.writeFileSync(pathFile + '/' + fileName, fileContent, 'utf-8', function(err, data) {
-          marked(fileContent);
-          res.redirect(fileName+'/edit');
-        });
+        fs.writeFileSync(pathFile + '/' + fileName, fileContent, 'utf-8');
+        marked(fileContent);
+        res.redirect(fileName + '/edit');
       }
     } else {
       return res.render('index', {
@@ -136,7 +134,10 @@ exports.save = function (req, res) {
 
   if (fileName != ''){
     if (verifyExtension(fileName) === true) {
-      fs.writeFileSync(pathFile + '/' + fileName, fileContent, 'utf-8', function(err, data) {
+      fs.writeFileSync(pathFile + '/' + fileName, fileContent, 'utf-8');
+      marked(fileContent);
+      res.redirect(fileName + '/edit');
+      /*fs.writeFileSync(pathFile + '/' + fileName, fileContent, 'utf-8', function(err, data) {
         if (err) {
           return res.render('index', {
             title: '404',
@@ -146,7 +147,7 @@ exports.save = function (req, res) {
           marked(fileContent);
           res.redirect(fileName+'/edit');
         }
-      });
+      });*/
     }
   }else {
     return res.render('index', {
