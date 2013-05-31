@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="span3">
+    <ul>
+    {{#dirs_and_files}}
+      <li><a href="{{ name }}">{{ name }}</a></li>
+    {{/dirs_and_files}}
+    </ul>
+  </div>
+  <div class="span9">
+    <form method="post" action="createFile">
+      <div class="input-prepend">
+        <span class="add-on">Name: </span>
+        <input class="span4" id="fileName" type="text" placeholder="File name" name="fileName">
+      </div>
+      <textarea class="field span7" rows="15" name="fileContent" id="fileContent"></textarea>
+      <p>
+        <button class="btn btn-info" type="submit">Create</button>
+        <button class="btn btn-inverse" type="submit">Cancel</button>
+      </p>
+    </form>
+  </div>
+</div>
