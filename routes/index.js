@@ -50,7 +50,7 @@ exports.initialize = function (app) {
 
 exports.index = function (req, res) {
   res.render('index', {
-    title: path.basename(path.resolve(req.get('path'))),
+    title: path.basename(path.resolve(req.app.get('path'))),
     content: 'Select an .md file or folder from the sidebar.',
     dirs_and_files: req.dirs_and_files
   });
