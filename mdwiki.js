@@ -23,6 +23,7 @@ marked.setOptions({
   pedantic: false,
   sanitize: true,
   smartLists: true,
+  smartypants: true,
   langPrefix: 'language-',
   highlight: function (code, lang) {
     lang = lang === 'js' ? 'javascript' : lang;
